@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MONITORAMENTO OPERACIONAL — JATI → PECÉM</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- SIDEBAR NAV -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-area">
+        <div class="logo-icon"><i class="fa-solid fa-water"></i></div>
+        <div class="logo-text">
+          <span class="logo-title">JATI → PECÉM</span>
+          <span class="logo-sub">Sistema Hídrico Jaguaribe</span>
+        </div>
+      </div>
+      <button class="sidebar-toggle" id="sidebarToggle"><i class="fa-solid fa-bars"></i></button>
+    </div>
+    <ul class="nav-menu">
+      <li class="nav-item active" data-view="home">
+        <i class="fa-solid fa-gauge-high"></i><span>Visão Geral</span>
+      </li>
+      <li class="nav-item" data-view="mapa">
+        <i class="fa-solid fa-diagram-project"></i><span>Mapa do Sistema</span>
+      </li>
+      <li class="nav-item" data-view="trechos">
+        <i class="fa-solid fa-route"></i><span>Trechos</span>
+      </li>
+      <li class="nav-item" data-view="reservatorios">
+        <i class="fa-solid fa-droplet"></i><span>Reservatórios</span>
+      </li>
+      <li class="nav-item" data-view="bombeamento">
+        <i class="fa-solid fa-gear"></i><span>Bombeamento</span>
+      </li>
+      <li class="nav-item" data-view="etas">
+        <i class="fa-solid fa-industry"></i><span>ETAs</span>
+      </li>
+      <li class="nav-item" data-view="usuarios">
+        <i class="fa-solid fa-users"></i><span>Usuários</span>
+      </li>
+      <li class="nav-item" data-view="alertas">
+        <i class="fa-solid fa-triangle-exclamation"></i><span>Alertas</span>
+        <span class="badge badge-red" id="alertBadge">3</span>
+      </li>
+      <li class="nav-item" data-view="historico">
+        <i class="fa-solid fa-clock-rotate-left"></i><span>Histórico</span>
+      </li>
+    </ul>
+    <div class="sidebar-footer">
+      <div class="update-info">
+        <i class="fa-solid fa-circle update-dot"></i>
+        <span id="lastUpdate">Atualizado 07:15</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content" id="mainContent">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="breadcrumb" id="breadcrumb">
+        <span>Visão Geral</span>
+      </div>
+      <div class="topbar-filters">
+        <select class="filter-select" id="filterPeriod">
+          <option value="hoje">Hoje</option>
+          <option value="7d">Últimos 7 dias</option>
+          <option value="30d">Últimos 30 dias</option>
+          <option value="mes">Este mês</option>
+        </select>
+        <select class="filter-select" id="filterTrecho">
+          <option value="">Todos os trechos</option>
+          <option value="1">PISF / Jati</option>
+          <option value="2">CAC + Rios</option>
+          <option value="3">Castanhão + Eixão I</option>
+          <option value="4">Eixão II + III</option>
+          <option value="5">Pacoti / Riachão / Gavião</option>
+          <option value="6">ETAs + RMF</option>
+          <option value="7">Pecém + Industriais</option>
+        </select>
+        <select class="filter-select" id="filterStatus">
+          <option value="">Todos os status</option>
+          <option value="normal">Normal</option>
+          <option value="atencao">Atenção</option>
+          <option value="critico">Crítico</option>
+          <option value="inativo">Inativo</option>
+        </select>
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" placeholder="Buscar ativo..." id="searchInput" />
+        </div>
+      </div>
+      <div class="date-display">
+        <span id="currentDate">06/04/2026</span>
+        <span class="ref-date">Ref. média: 01/03/2026</span>
+      </div>
+    </header>
+
+    <!-- VIEWS -->
+    <div class="view-container">
+
+      <!-- VIEW: HOME EXECUTIVA -->
+      <section class="view active" id="view-home">
+        <div class="view-header">
+          <h1>Saúde do Sistema</h1>
+          <div class="status-badge atencao"><i class="fa-solid fa-circle-exclamation"></i> Atenção Moderada</div>
+        </div>
+
+        <!-- KPIs -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon blue"><i class="fa-solid fa-arrows-left-right"></i></div>
+            <div class="kpi-data">
+              <span class="kpi-value">18,4</span>
+              <span class="kpi-unit">m³/s</span>
+              <span class="kpi-label">Vazão Total Transferida</span>
+              <span class="kpi-trend up"><i class="fa-solid fa-arrow-trend-up"></i> +0,3 vs ontem</span>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon green"><i class="fa-solid fa-industry"></i></div>
+            <div class="kpi-data">
+              <span class="kpi-value">9,66</span>
+              <span class="kpi-unit">m³/s</span>
+              <span class="kpi-label">Somatório ETAs (Gavião + Oeste)</span>
+              <span class="kpi-trend stable"><i class="fa-solid fa-minus"></i> estável</span>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon amber"><i class="fa-solid fa-droplet"></i></div>
+            <div class="kpi-data">
+              <span class="kpi-value">62,4</span>
+              <span class="kpi-unit">%</span>
+              <span class="kpi-label">Volume Útil Médio (Açudes Estratégicos)</span>
+              <span class="kpi-trend down"><i class="fa-solid fa-arrow-trend-down"></i> -0,8% vs ontem</span>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon green"><i class="fa-solid fa-gear"></i></div>
+            <div class="kpi-data">
+              <span class="kpi-value">14 / 20</span>
+              <span class="kpi-unit"></span>
+              <span class="kpi-label">Bombas em Operação / Disponíveis</span>
+              <span class="kpi-trend stable"><i class="fa-solid fa-minus"></i> normal</span>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon red"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div class="kpi-data">
+              <span class="kpi-value">3</span>
+              <span class="kpi-unit"></span>
+              <span class="kpi-label">Ativos em Alerta Hoje</span>
+              <span class="kpi-trend down"><i class="fa-solid fa-arrow-trend-up"></i> +1 vs ontem</span>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon amber"><i class="fa-solid fa-chart-line"></i></div>
+            <div class="kpi-data">
+              <span class="kpi-value">-12,3</span>
+              <span class="kpi-unit">%</span>
+              <span class="kpi-label">Maior Desvio vs Média do Mês</span>
+              <span class="kpi-trend down">EB Castanhão</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- MINI SINÓTICO + ALERTAS -->
+        <div class="home-bottom">
+          <div class="mini-sinotico-panel">
+            <h3><i class="fa-solid fa-diagram-project"></i> Fluxo do Sistema</h3>
+            <div class="mini-sinotico" id="miniSinotico">
+              <!-- renderizado por JS -->
+              <p style="padding: 20px; color: var(--text-sec); text-align: center;">[Visualização Resumida do Fluxo]</p>
+            </div>
+            <button class="btn-link" onclick="navigateTo('mapa')">Ver mapa completo →</button>
+          </div>
+          <div class="side-panels">
+            <div class="panel-section">
+              <h3><i class="fa-solid fa-triangle-exclamation red-text"></i> Alertas Críticos</h3>
+              <ul class="alert-list" id="homeAlertList">
+                <li><span style="color:var(--red);">⚠️ EB Castanhão</span><br><small>Motobomba MB-4 indisponível.</small></li>
+              </ul>
+            </div>
+            <div class="panel-section">
+              <h3><i class="fa-solid fa-chart-bar purple-text"></i> Top Desvios</h3>
+              <ul class="desvio-list" id="homeDesvioList">
+                <li>Acude Jati: -2.3% ref mês</li>
+              </ul>
+            </div>
+            <div class="panel-section">
+              <h3><i class="fa-solid fa-clock-rotate-left"></i> Tendência 7 dias</h3>
+              <div class="chart-mini-container">
+                <canvas id="trendChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: MAPA SINÓTICO -->
+      <section class="view" id="view-mapa">
+        <div class="view-header">
+          <h1>Mapa Sinótico — Jati → Pecém</h1>
+          <div class="status-badge normal"><i class="fa-solid fa-circle-check"></i> Operando</div>
+        </div>
+        <div class="mapa-layout">
+          <div class="mapa-sidebar-filters">
+            <h4>Filtros do Mapa</h4>
+            <div class="filter-group">
+              <label>Indicador principal</label>
+              <select id="mapaIndicador" class="filter-select-full">
+                <option value="vazao">Vazão (m³/s)</option>
+                <option value="volume">Volume (%)</option>
+                <option value="nivel">Nível (m)</option>
+                <option value="bombas">Bombas</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Status</label>
+              <div class="status-filters">
+                <label class="checkbox-label"><input type="checkbox" checked value="normal"> Normal</label>
+                <label class="checkbox-label"><input type="checkbox" checked value="atencao"> Atenção</label>
+                <label class="checkbox-label"><input type="checkbox" checked value="critico"> Crítico</label>
+                <label class="checkbox-label"><input type="checkbox" checked value="inativo"> Inativo</label>
+              </div>
+            </div>
+            <div class="legenda-mapa">
+              <h5>Legenda</h5>
+              <div class="legenda-item"><span class="dot azul"></span> Normal</div>
+              <div class="legenda-item"><span class="dot ambar"></span> Atenção</div>
+              <div class="legenda-item"><span class="dot vermelho"></span> Crítico</div>
+              <div class="legenda-item"><span class="dot cinza"></span> Inativo</div>
+            </div>
+          </div>
+          <div class="mapa-canvas-area">
+            <div class="sinotico-full" id="sinoticoFull">
+              <p style="padding: 20px; color: var(--text-sec); text-align: center;">[Mapa Interativo Renderizado Aqui]</p>
+            </div>
+          </div>
+          <div class="mapa-detail-panel" id="mapaDetailPanel">
+            <div class="no-selection">
+              <i class="fa-solid fa-hand-pointer"></i>
+              <p>Clique em um ativo no mapa para ver detalhes</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: TRECHOS -->
+      <section class="view" id="view-trechos">
+        <div class="view-header">
+          <h1>Visão por Macrotrecho</h1>
+        </div>
+        <div class="trecho-tabs">
+          <button class="trecho-tab active" data-trecho="1">1. PISF / Jati</button>
+          <button class="trecho-tab" data-trecho="2">2. CAC + Rios</button>
+          <button class="trecho-tab" data-trecho="3">3. Castanhão + Eixão I</button>
+          <button class="trecho-tab" data-trecho="4">4. Eixão II + III</button>
+          <button class="trecho-tab" data-trecho="5">5. Pacoti / Riachão / Gavião</button>
+          <button class="trecho-tab" data-trecho="6">6. ETAs + RMF</button>
+          <button class="trecho-tab" data-trecho="7">7. Pecém + Industriais</button>
+        </div>
+        <div class="trecho-content" id="trechoContent">
+          <p style="padding: 20px; color: var(--text-sec);">Conteúdo do Macrotrecho</p>
+        </div>
+      </section>
+
+      <!-- VIEW: RESERVATÓRIOS -->
+      <section class="view" id="view-reservatorios">
+        <div class="view-header">
+          <h1>Reservatórios</h1>
+        </div>
+        <div class="cards-grid" id="reservCards"></div>
+      </section>
+
+      <!-- VIEW: BOMBEAMENTO -->
+      <section class="view" id="view-bombeamento">
+        <div class="view-header">
+          <h1>Estações de Bombeamento</h1>
+        </div>
+        <div class="cards-grid" id="bombCards"></div>
+      </section>
+
+      <!-- VIEW: ETAs -->
+      <section class="view" id="view-etas">
+        <div class="view-header">
+          <h1>Estações de Tratamento de Água</h1>
+        </div>
+        <div class="cards-grid" id="etaCards"></div>
+      </section>
+
+      <!-- VIEW: USUÁRIOS -->
+      <section class="view" id="view-usuarios">
+        <div class="view-header">
+          <h1>Usuários do Sistema</h1>
+        </div>
+        <div class="cards-grid" id="userCards"></div>
+      </section>
+
+      <!-- VIEW: ALERTAS -->
+      <section class="view" id="view-alertas">
+        <div class="view-header">
+          <h1>Central de Alertas</h1>
+        </div>
+        <div id="alertasContent">
+           <ul class="alert-list">
+              <li><span style="color:var(--red);">⚠️ EB Castanhão</span><br><small>Motobomba MB-4 indisponível.</small></li>
+           </ul>
+        </div>
+      </section>
+
+      <!-- VIEW: HISTÓRICO -->
+      <section class="view" id="view-historico">
+        <div class="view-header">
+          <h1>Histórico Operacional</h1>
+        </div>
+        <div class="historico-layout">
+          <div class="historico-filters">
+            <select class="filter-select-full" id="historicoAtivo">
+              <option value="jati">Barragem Jati</option>
+              <option value="castanhao">EB Castanhão</option>
+            </select>
+            <select class="filter-select-full" id="historicoIndicador">
+              <option value="vazao">Vazão</option>
+              <option value="volume">Volume</option>
+              <option value="nivel">Nível</option>
+            </select>
+          </div>
+          <div class="historico-chart-area">
+            <canvas id="historicoChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
