@@ -442,3 +442,75 @@ html, body {
 /* Utilities */
 .red-text { color: var(--red-l); }
 .purple-text { color: var(--purple-l); }
+
+/* FLUXOGRAMA MINI */
+.fluxo-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 20px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+.fluxo-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 90px;
+}
+.fluxo-box {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid var(--blue);
+  color: var(--blue-l);
+  padding: 8px 6px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-align: center;
+  width: 100%;
+}
+.fluxo-val {
+  font-size: 0.75rem;
+  color: var(--text-sec);
+  margin-top: 6px;
+}
+.fluxo-arrow {
+  color: var(--blue);
+  font-size: 1rem;
+}
+
+/* PROGRESS BAR DE DESVIOS */
+.desvio-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.desvio-name {
+  width: 120px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-sec);
+}
+.desvio-bar-container {
+  flex: 1;
+  height: 6px;
+  background: var(--surface-hover);
+  border-radius: 4px;
+  margin: 0 10px;
+}
+.desvio-bar {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--red-l);
+}
+.desvio-val {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--red-l);
+  width: 50px;
+  text-align: right;
+}
